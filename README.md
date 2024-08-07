@@ -51,8 +51,5 @@ This project is an AI-driven version of the popular Flappy Bird game. It uses a 
 - Allow users to train their own birds
 - Add sound effects and background music
 
-## Credits
-This project was inspired by Daniel Shiffman's Coding Train series on YouTube.
-
 ## License
 This project is open source and available under the [MIT License](LICENSE).
