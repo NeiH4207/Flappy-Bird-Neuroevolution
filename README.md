@@ -5,7 +5,6 @@ This project is an AI-driven version of the popular Flappy Bird game. It uses a 
 
 <video width="600" controls autoplay loop>
   <source src="https://github.com/user-attachments/assets/6c57d9e7-c6ab-4892-aa0e-b4f77838d9c0" type="video/mp4">
-  Your browser does not support the video tag.
 </video>
 
 ## Features
