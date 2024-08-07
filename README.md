@@ -3,6 +3,8 @@
 ## Description
 This project is an AI-driven version of the popular Flappy Bird game. It uses a neural network and genetic algorithm to train birds to navigate through pipes. The game showcases how machine learning can be applied to simple games to achieve superhuman performance.
 
+https://github.com/user-attachments/assets/6c57d9e7-c6ab-4892-aa0e-b4f77838d9c0
+
 ## Features
 - Flappy Bird game mechanics
 - Neural Network implementation for bird control
