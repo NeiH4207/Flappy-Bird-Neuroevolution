@@ -22,7 +22,7 @@ function setup() {
 }
 
 function initializeCanvas() {
-  const canvas = createCanvas(1200, 700);
+  const canvas = createCanvas(1200, 500);
   canvas.parent('canvascontainer');
 }
 
