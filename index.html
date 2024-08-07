@@ -1,33 +1,51 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>FAKE Flappy Bird </title>
-  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
-  <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
-  <script language="javascript" type="text/javascript" src="nn/nn.js"></script>
-  <script language="javascript" type="text/javascript" src="nn/matrix.js"></script>
-  <script language="javascript" type="text/javascript" src="sketch.js"></script>
-  <script language="javascript" type="text/javascript" src="src/alg.js"></script>
-  <script language="javascript" type="text/javascript" src="src/bird.js"></script>
-  <script language="javascript" type="text/javascript" src="src/pipe.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAKE Flappy Bird</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+    <script src="nn/nn.js"></script>
+    <script src="nn/matrix.js"></script>
+    <script src="sketch.js"></script>
+    <script src="src/alg.js"></script>
+    <script src="src/bird.js"></script>
+    <script src="src/pipe.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
-<body align = 'center'><!-- 
-  <img border = "0" src="src/a0.png" width = "15px" height="15px"> -->
-  <div id="canvascontainer"></div>
-  <p>
-    Alive: <span id="numalive">0</span>
-    <br/>Generation: <span id="numgen">0</span>
-    <br/>Frame: <span id="hs">0</span>
-    <br/>Highest score: <span id="ahs">0</span>
-    <br/>Run best: <input id="speedSlider" type="range" min="1" max="10" value="1"> <span id="speed"></span>
-  </p>
-  <p>
-    <button id="best"></button>
-  </p>
-
-
+<body>
+    <main>
+        <div id="canvascontainer"></div>
+        <div class="game-info">
+            <div class="info-item">
+                <label for="numalive">Alive:</label>
+                <span id="numalive">0</span>
+            </div>
+            <div class="info-item">
+                <label for="numgen">Generation:</label>
+                <span id="numgen">0</span>
+            </div>
+            <div class="info-item">
+                <label for="hs">Frame:</label>
+                <span id="hs">0</span>
+            </div>
+            <div class="info-item">
+                <label for="ahs">Highest score:</label>
+                <span id="ahs">0</span>
+            </div>
+            <div class="info-item">
+                <label for="speedSlider">Run speed:</label>
+                <input id="speedSlider" type="range" min="1" max="10" value="1">
+                <span id="speed"></span>
+            </div>
+        </div>
+        <button id="best" class="run-best-btn">Run Best</button>
+    </main>
+    <footer>
+        <p>&copy; 2024 FAKE Flappy Bird. All rights reserved.</p>
+    </footer>
 </body>
-
 </html>

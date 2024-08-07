@@ -1,21 +1,28 @@
 class Pipe {
   constructor() {
-    let spacing =  200;
-    let centery = random(spacing, height - spacing);
-    this.top = centery - spacing / 2;
-    this.bottom = height - (centery + spacing / 2);
+    const spacing = 200;
+    const centerY = random(spacing, height - spacing);
+    this.top = centerY - spacing / 2;
+    this.bottom = height - (centerY + spacing / 2);
     this.x = width;
     this.w = 60;
     this.speed = 8;
   }
 
   hits(bird) {
-    if ((bird.y - bird.r) < this.top || (bird.y + bird.r) > (height - this.bottom)) {
-      if (bird.x > this.x && bird.x < this.x + this.w) {
-        return true;
-      }
-    }
-    return false;
+    const birdTop = bird.y - bird.r;
+    const birdBottom = bird.y + bird.r;
+    const birdLeftEdge = bird.x;
+    const birdRightEdge = bird.x + bird.r;
+
+    const pipeLeftEdge = this.x;
+    const pipeRightEdge = this.x + this.w;
+
+    return (
+      (birdTop < this.top || birdBottom > height - this.bottom) &&
+      birdRightEdge > pipeLeftEdge &&
+      birdLeftEdge < pipeRightEdge
+    );
   }
 
   show() {
@@ -32,10 +39,6 @@ class Pipe {
   }
 
   offscreen() {
-    if (this.x < -this.w) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.x < -this.w;
   }
 }

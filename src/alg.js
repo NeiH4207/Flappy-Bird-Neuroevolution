@@ -1,72 +1,37 @@
-let pr_mutate = 0.1;
+const MUTATION_RATE = 0.1;
+
 function mutate(child) {
-
-  for (let i = 0; i < child.brain.weights_ih.rows; i++) {
-    for (let j = 0; j < child.brain.weights_ih.cols; j++) {
-      if(random(1) < pr_mutate){
-        child.brain.weights_ih.data[i][j] += randomGaussian(0, 0.5);
+  const mutateLayer = (layer) => {
+    for (let i = 0; i < layer.rows; i++) {
+      for (let j = 0; j < layer.cols; j++) {
+        if (random(1) < MUTATION_RATE) {
+          layer.data[i][j] += randomGaussian(0, 0.5);
+        }
       }
     }
-  }
+  };
 
-  for (let i = 0; i < child.brain.weights_ho.rows; i++) {
-    for (let j = 0; j < child.brain.weights_ho.cols; j++) {
-      if(random(1) < pr_mutate){
-        child.brain.weights_ho.data[i][j] += randomGaussian(0, 0.5);
-      }
-    }
-  }
-
-  for (let i = 0; i < child.brain.bias_h.rows; i++) {
-    for (let j = 0; j < child.brain.bias_h.cols; j++) {
-      if(random(1) < pr_mutate){
-        child.brain.bias_h.data[i][j] += randomGaussian(0, 0.5);
-      }
-    }
-  }
-
-  for (let i = 0; i < child.brain.bias_o.rows; i++) {
-    for (let j = 0; j < child.brain.bias_o.cols; j++) {
-      if(random(1) < pr_mutate){
-        child.brain.bias_o.data[i][j] += randomGaussian(0, 0.5);
-      }
-    }
-  }
+  mutateLayer(child.brain.weights_ih);
+  mutateLayer(child.brain.weights_ho);
+  mutateLayer(child.brain.bias_h);
+  mutateLayer(child.brain.bias_o);
 }
 
-
-function crossover(parent1, parent2){
-  for (let i = 0; i < parent1.brain.weights_ih.rows; i++) {
-    for (let j = 0; j < parent1.brain.weights_ih.cols; j++) {
-      if(random(1) < 0.5){
-        parent1.brain.weights_ih.data[i][j] = parent2.brain.weights_ih.data[i][j];
+function crossover(parent1, parent2) {
+  const crossoverLayer = (layer1, layer2) => {
+    for (let i = 0; i < layer1.rows; i++) {
+      for (let j = 0; j < layer1.cols; j++) {
+        if (random(1) < 0.5) {
+          layer1.data[i][j] = layer2.data[i][j];
+        }
       }
     }
-  }
+  };
 
-  for (let i = 0; i < parent1.brain.weights_ho.rows; i++) {
-    for (let j = 0; j < parent1.brain.weights_ho.cols; j++) {
-      if(random(1) < 0.5){
-        parent1.brain.weights_ho.data[i][j] =  parent2.brain.weights_ho.data[i][j];
-      }
-    }
-  }
-
-  for (let i = 0; i < parent1.brain.bias_h.rows; i++) {
-    for (let j = 0; j < parent1.brain.bias_h.cols; j++) {
-      if(random(1) < 0.5){
-        parent1.brain.bias_h.data[i][j] =  parent2.brain.bias_h.data[i][j];
-      }
-    }
-  }
-
-  for (let i = 0; i < parent1.brain.bias_o.rows; i++) {
-    for (let j = 0; j < parent1.brain.bias_o.cols; j++) {
-      if(random(1) < 0.5){
-        parent1.brain.bias_o.data[i][j] =  parent2.brain.bias_o.data[i][j];
-      }
-    }
-  }
+  crossoverLayer(parent1.brain.weights_ih, parent2.brain.weights_ih);
+  crossoverLayer(parent1.brain.weights_ho, parent2.brain.weights_ho);
+  crossoverLayer(parent1.brain.bias_h, parent2.brain.bias_h);
+  crossoverLayer(parent1.brain.bias_o, parent2.brain.bias_o);
 
   return parent1;
 }
@@ -91,42 +56,31 @@ function nextGeneration() {
   activeBirds[0] = bestBird;
 }
 
-function generate(old_population) {
-  // Sort all
-  old_population.sort(function(a, b){return b.fitness - a.fitness});
+function generate(oldPopulation) {
+  oldPopulation.sort((a, b) => b.fitness - a.fitness);
 
-  let parents = [];
-  for (let i = 0; i < totalPopulation; i++) {
-    let parent = poolSelection(old_population);
-    parents[i] = parent;
+  const parents = Array.from({length: totalPopulation}, () => poolSelection(oldPopulation));
+  const newPopulation = parents.map(() => {
+    const child = crossover(random(parents), random(parents));
+    mutate(child);
+    return new Bird(child.brain);
+  });
+
+  // Elitism: Keep top 5% of old population
+  const eliteCount = Math.floor(0.05 * totalPopulation);
+  for (let i = 0; i < eliteCount; i++) {
+    newPopulation[i] = oldPopulation[i];
+    newPopulation[i].score = 0;
   }
-  let new_population = [];
-  for(let i = 0; i < totalPopulation; i++){
-    new_population[i] = crossover(random(parents), random(parents));
-    mutate(new_population[i]);
-    new_population[i] = new Bird(new_population[i].brain);
-  }
-  for(let i = 0; i < 0.05 * totalPopulation; i++){
-    new_population[i] = old_population[i];
-    new_population[i].score = 0;
-  }
-  return new_population;
+
+  return newPopulation;
 }
 
 function normalizeFitness(population) {
-  for (let i = 0; i < population.length; i++) {
-    population[i].score = pow(population[i].score, 4);
-  }
-
-  let sum = 0;
-  for (let i = 0; i < population.length; i++) {
-    sum += population[i].score;
-  }
-  for (let i = 0; i < population.length; i++) {
-    population[i].fitness = population[i].score / sum;
-  }
+  population.forEach(bird => bird.score = Math.pow(bird.score, 4));
+  const sum = population.reduce((acc, bird) => acc + bird.score, 0);
+  population.forEach(bird => bird.fitness = bird.score / sum);
 }
-
 
 function resetGame() {
   counter = 0;
@@ -136,6 +90,5 @@ function resetGame() {
     bestBird.score = 0;
     bestBird.x = 200;
   }
-  pipes = [];
-  pipes.push(new Pipe());
+  pipes = [new Pipe()];
 }
